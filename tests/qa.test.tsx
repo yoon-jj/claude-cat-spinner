@@ -85,3 +85,15 @@ test('desktop: 원래 스피너 그대로', async ($, on) => {
   expect((await ui.find({ type: 'Text', text: /tokens/ }))?.text).toMatch(/Creating notes\.md/)
   await ui.unmount()
 })
+
+test('프레임 타이머: 시간이 흐르면 고양이 프레임이 바뀜', async ($, on) => {
+  engine(on)
+  const ui = await mount($, { mode: 'thinking' })
+  const seen = new Set<string>()
+  for (let i = 0; i < 12; i++) {
+    seen.add((await ui.findAll({ type: 'Text', in: 'cat' })).map(t => t.text).join('\n'))
+    await ui.advance(250)
+  }
+  expect(seen.size).toBeGreaterThan(1)
+  await ui.unmount()
+})

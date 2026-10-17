@@ -1,6 +1,6 @@
 {
   "name": "cat-spinner",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "스피너 옆에 고양이 애니메이션을 붙이고 스피너 단어를 고양이 행동에 맞춰 바꿈",
   "author": {
     "name": "yoon-jj"
