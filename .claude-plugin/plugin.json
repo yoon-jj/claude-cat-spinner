@@ -1,0 +1,27 @@
+{
+  "name": "cat-spinner",
+  "version": "0.1.0",
+  "description": "스피너 옆에 고양이 애니메이션을 붙이고 스피너 단어를 고양이 행동에 맞춰 바꿈",
+  "author": {
+    "name": "yoon-jj"
+  },
+  "repository": "https://github.com/yoon-jj/claude-cat-spinner",
+  "userConfig": {
+    "style": {
+      "type": "string",
+      "title": "고양이 문자",
+      "description": "cute: 유니코드(ꞈ ᴗ ♡), ascii: 순수 ASCII. 터미널에서 칸이 밀리면 ascii로",
+      "default": "cute",
+      "options": [
+        "cute",
+        "ascii"
+      ]
+    },
+    "speed": {
+      "type": "number",
+      "title": "애니메이션 속도 배율",
+      "description": "1이 기본, 2면 두 배 빠르게",
+      "default": 1
+    }
+  }
+}

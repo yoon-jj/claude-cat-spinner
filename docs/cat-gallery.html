@@ -1,0 +1,299 @@
+<meta charset="utf-8">
+<title>고양이 스피너 도감</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 터미널 카드를 mode별 묶음으로 나열, 위에 고른 목록 바 */
+:root {
+  --bg: #f6f2ee; --fg: #2b2522; --muted: #7b6f68; --line: #e2d8d0;
+  --card: #fffaf6; --term: #1f1b1a; --term-fg: #e9e2dc; --term-dim: #8c817a;
+  --claude: #d97757; --pink: #f08fb0; --blue: #79b8e8; --yellow: #f2c66d; --green: #8fcf8f;
+  --pick: #d97757; --screen-bg: #16352a; --screen-fg: #8df0a8;
+  --display: "Gowun Dodum", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "D2Coding", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171413; --fg: #efe7e1; --muted: #a39790; --line: #332c29; --card: #211c1a; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #171413; --fg: #efe7e1; --muted: #a39790; --line: #332c29; --card: #211c1a; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 15px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 64px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1 { font-size: 28px; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); margin: 6px 0 0; max-width: 62ch; line-height: 1.6; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg);
+  border-bottom: 1px solid var(--line); padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.bar label { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: 14px; }
+.picked { font-family: var(--mono); font-size: 13px; flex: 1 1 260px; min-width: 0; }
+.picked b { color: var(--pick); }
+button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--fg);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--claude); outline-offset: 2px; }
+section h2 { font-size: 19px; margin: 0 0 4px; }
+section p { color: var(--muted); margin: 0 0 14px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card.on { border-color: var(--pick); box-shadow: 0 0 0 1px var(--pick); }
+.head { display: flex; align-items: center; gap: 8px; }
+.num { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.name { font-weight: 600; flex: 1; }
+.head input { width: 18px; height: 18px; accent-color: var(--pick); }
+.term { background: var(--term); color: var(--term-fg); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+.term pre { margin: 0; font-family: var(--mono); font-size: 13.5px; line-height: 1.35; white-space: pre; }
+.cat { color: var(--claude); }
+.a-pink { color: var(--pink); } .a-blue { color: var(--blue); } .a-yellow { color: var(--yellow); } .a-green { color: var(--green); } .a-dim { color: var(--term-dim); }
+.glyph { color: var(--claude); }
+.word span { transition: color .1s; }
+.meta { color: var(--term-dim); }
+.screen { background: var(--screen-bg); color: var(--screen-fg); }
+.desc { color: var(--muted); font-size: 13px; margin: 0; }
+.verbs { font-family: var(--mono); font-size: 12px; color: var(--claude); margin: 0; }
+.mouths { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center; color: var(--muted); font-size: 14px; }
+.mouths label { cursor: pointer; }
+.mouths input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.mouths span { font-family: var(--mono); min-width: 30px; text-align: center; padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; color: var(--fg); background: var(--card); }
+.mouths input:checked + span { border-color: var(--pick); color: var(--pick); font-weight: 600; }
+.mouths input:focus-visible + span { outline: 2px solid var(--claude); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .word span { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>고양이 스피너 도감</h1>
+    <p class="lede">스피너 줄 왼쪽에 붙을 고양이 후보 24종이에요. 별 문자 회전, 글자 색 반짝임, 경과 시간·토큰·effort는 그대로 두고, 스피너 단어만 고양이 행동에 맞춰 바꿔요. 위 바에서 입 모양을 골라 보세요. 마음에 드는 고양이를 체크하고, 아래 바의 번호 목록을 복사해서 알려주세요.</p>
+  </header>
+
+  <div class="bar">
+    <span class="picked" id="picked">아직 고른 고양이가 없어요</span>
+    <span class="mouths" id="mouths" role="radiogroup" aria-label="입 모양">입:</span>
+    <span class="mouths" id="closeds" role="radiogroup" aria-label="감은 눈 모양">감은 눈:</span>
+    <label><input type="checkbox" id="ascii"> ASCII 모드</label>
+    <label>속도 <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1"></label>
+    <button id="copy" type="button">번호 복사</button>
+  </div>
+
+  <div id="sections"></div>
+</div>
+
+<script>
+// 고양이 데이터: frames = [[1줄, 2줄], ...], ms = 프레임 간격
+const CATS = [
+  // ── thinking
+  { mode: 'thinking', name: '꾸벅꾸벅', desc: '졸다가 깜짝 깨요', ms: 450, frames: [
+    [' /\\_/\\     ', '( •ω• )    '], [' /\\_/\\  z  ', '( -ω- )    '], [' /\\_/\\  zZ ', '( -ω- )    '],
+    [' /\\_/\\ zZz ', '( ˘ω˘ )    '], [' /\\_/\\ zZz ', '( ˘ω˘ )    '], [' /\\_/\\  !  ', '( ºωº )    ']] },
+  { mode: 'thinking', name: '물고기 꿈', desc: '생각 풍선 속에 물고기가 헤엄쳐요', ms: 380, frames: [
+    [' /\\_/\\  .', '( ˘ω˘ )'], [' /\\_/\\  .o', '( ˘ω˘ )'], [' /\\_/\\  .oO', '( ˘ω˘ )'],
+    [' /\\_/\\  .oO(><>  )', '( ˘ω˘ )'], [' /\\_/\\  .oO( ><> )', '( ˘ω˘ )'], [' /\\_/\\  .oO(  ><>)', '( ˘ω˘ )'], [' /\\_/\\  .oO(  ><>)', '( ˘ω˘ ) ♡']] },
+  { mode: 'thinking', name: '두리번두리번', desc: '눈동자가 좌우로 굴러가요', ms: 420, frames: [
+    [' /\\_/\\', '( •ω• )'], [' /\\_/\\', '(•ω•  )'], [' /\\_/\\', '(•ω•  )'], [' /\\_/\\', '( •ω• )'],
+    [' /\\_/\\', '(  •ω•)'], [' /\\_/\\ ?', '(  •ω•)']] },
+  { mode: 'thinking', name: '귀 쫑긋', desc: '한쪽 귀가 파닥, 물음표가 떠요', ms: 300, frames: [
+    [' /\\_/\\  ', '( •ω• ) '], [' /\\_/|  ', '( •ω• ) '], [' /\\_/\\  ', '( •ω• ) '], [' /\\_/|  ', '( •ω• ) '],
+    [' /\\_/\\ ?', '( •ω• ) '], [' /\\_/\\ ?', '( •ω• ) ']] },
+  { mode: 'thinking', name: '식빵 굽기', desc: '동그랗게 웅크리고 눈만 깜빡', ms: 500, frames: [
+    [' /\\_/\\____', '( •ω•     )~'], [' /\\_/\\____', '( •ω•     )~'], [' /\\_/\\____', '( -ω-     )~'],
+    [' /\\_/\\____', '( •ω•     )⌒'], [' /\\_/\\____', '( ˘ω˘     )~']] },
+  { mode: 'thinking', name: '별 세기', desc: '하늘을 보며 반짝이는 별을 세요', ms: 350, frames: [
+    [' /\\_/\\   ✧  ', '( ˙ω˙ )'], [' /\\_/\\  ✦ ⋆ ', '( ˙ω˙ )'], [' /\\_/\\ ⋆ ✧ ✦', '( ˙ω˙ )'], [' /\\_/\\  ✧ ⋆ ', '( ˘ω˘ )']] },
+
+  // ── tool-use
+  { mode: 'tool', name: '실뭉치 데굴데굴', desc: '툭 치면 굴러가고 다시 쫓아가요', ms: 260, frames: [
+    [' /\\_/\\', '( •ω• )つ@'], [' /\\_/\\', '( •ω• )  @'], [' /\\_/\\', '( •ω• )    @'], [' /\\_/\\', '( ºωº )     @'],
+    [' /\\_/\\', '( >ω< )つ   @'], [' /\\_/\\', '( >ω< )つ  @'], [' /\\_/\\', '( •ω• )つ@']] },
+  { mode: 'tool', name: '꾹꾹이', desc: '앞발을 번갈아 꾹, 꾹', ms: 330, frames: [
+    ['  /\\_/\\ ', 'ฅ( •ω• ) '], ['  /\\_/\\ ', ' ( •ω• )ฅ'], ['  /\\_/\\ ', 'ฅ( •ω• ) '], ['  /\\_/\\ ', ' ( ˘ω˘ )ฅ'],
+    ['  /\\_/\\ ', 'ฅ( ˘ω˘ ) '], ['  /\\_/\\ ', 'ฅ( ˘ω˘ )ฅ']] },
+  { mode: 'tool', name: '노트북 타닥타닥', desc: '노트북 화면에 코드가 한 글자씩 찍혀요', ms: 260, frames: [
+    [' /\\_/\\   {>_  }', '( •ω•)つ/______\\'], [' /\\_/\\   {>   }', '( •ω•)っ/______\\'], [' /\\_/\\   {>=_ }', '( •ω•)つ/______\\'],
+    [' /\\_/\\   {>== }', '( •ω•)っ/______\\'], [' /\\_/\\   {>==_}', '( >ω<)つ/______\\'], [' /\\_/\\   { ok }', '( ^ω^)っ/______\\'],
+    [' /\\_/\\ ♪ { ok }', '( ^ω^)  /______\\']] },
+  { mode: 'tool', name: '상자에 쏙', desc: '폴짝 뛰어들어 숨었다가 빼꼼 고개를 내밀어요', ms: 340, frames: [
+    [' /\\_/\\', '( •ω• )  |_____|'], [' /\\_/\\', '( •ω• )  |_____|'], ['    ( •ω• )', '      U U|_____|'],
+    ['', '         |_____|'], ['          ^ ^', '         |_____|'], ['', '         |_____|'],
+    ['          ^ ^', '         |_____|'], ['          /\\_/\\', '         |(•ω•)|'], ['          /\\_/\\', '         |(^ω^)|'],
+    ['          /\\_/\\ ♡', '         |(^ω^)|'], ['          ^ ^', '         |_____|']] },
+  { mode: 'tool', name: '쥐돌이 사냥', desc: '장난감 쥐에게 살금살금', ms: 320, frames: [
+    [' /\\_/\\', '( •ω• )    <:3 )~'], [' /\\_/\\', '( •ω• )   <:3 )~'], [' /\\_/\\', '( ºωº )  <:3 )~'],
+    [' /\\_/\\', '( ºωº ) <:3 )~'], [' /\\_/\\  !', '( >ω< )つ<:3 )~'], [' /\\_/\\', '( ^ω^ )つ<:3 )~']] },
+  { mode: 'tool', name: '낚시', desc: '찌를 기다리다 물고기를 낚아요', ms: 400, frames: [
+    [' /\\_/\\', '( •ω• )ノ~~~~J'], [' /\\_/\\', '( •ω• )ノ~~~~J'], [' /\\_/\\', '( -ω- )ノ~~~~J'],
+    [' /\\_/\\  !', '( ºωº )ノ~~~~J.'], [' /\\_/\\', '( ^ω^ )ノ~~~<><'], [' /\\_/\\  ♡', '( ^ω^ )ノ~~~<><']] },
+
+  // ── responding
+  { mode: 'responding', name: '꼬리 살랑', desc: '수염 고양이가 꼬리를 흔들어요', ms: 300, frames: [
+    ['  /\\_/\\   ', '=( •ω• )= ~'], ['  /\\_/\\   ', '=( •ω• )= ⌒'], ['  /\\_/\\   ', '=( •ω• )= ~'], ['  /\\_/\\   ', '=( ^ω^ )= ⌒']] },
+  { mode: 'responding', name: '하트 뿅뿅', desc: '하트가 몽글몽글 올라가요', ms: 330, frames: [
+    [' /\\_/\\    ', '( ˘ω˘ ) ♡ '], [' /\\_/\\  ♡ ', '( ˘ω˘ )   '], [' /\\_/\\   ♡', '( ^ω^ )   '],
+    [' /\\_/\\    ', '( ^ω^ )   '], [' /\\_/\\    ', '( ^ω^ ) ♡ ']] },
+  { mode: 'responding', name: '츄르 냠냠', desc: '츄르가 점점 줄어들어요', ms: 360, frames: [
+    [' /\\_/\\', '( •ω• ) ▭▭▭'], [' /\\_/\\', '( >ω< )▭▭▭'], [' /\\_/\\', '( >ω< )▭▭'], [' /\\_/\\', '( >ω< )▭'],
+    [' /\\_/\\  ♡', '( ˘ω˘ )'], [' /\\_/\\', '( ^ω^ )~']] },
+  { mode: 'responding', name: '골골송', desc: '음표가 둥실둥실', ms: 350, frames: [
+    [' /\\_/\\  ♪  ', '( ˘ω˘ )    '], [' /\\_/\\   ♫ ', '( -ω- )    '], [' /\\_/\\  ♪ ♫', '( ˘ω˘ )    '], [' /\\_/\\ ♫  ♪', '( ^ω^ )    ']] },
+  { mode: 'responding', name: '안녕 손인사', desc: '앞발을 흔들흔들', ms: 280, frames: [
+    [' /\\_/\\ ', '( •ω• )ノ'], [' /\\_/\\ ', '( •ω• )ﾉ'], [' /\\_/\\ ', '( ^ω^ )ノ'], [' /\\_/\\ ', '( ^ω^ )ﾉ']] },
+  { mode: 'responding', name: '반짝 윙크', desc: '가끔 한쪽 눈을 찡긋', ms: 300, frames: [
+    [' /\\_/\\  ', '( •ω• ) '], [' /\\_/\\  ', '( •ω• ) '], [' /\\_/\\  ', '( •ω• ) '], [' /\\_/\\ ✧', '( •ω- ) '], [' /\\_/\\  ', '( •ω• ) ']] },
+
+  // ── requesting
+  { mode: 'requesting', name: '총총 걸어가기', desc: '발자국을 남기며 한 칸씩', ms: 260, frames: [
+    [' /\\_/\\      ', '( •ω• )     '], ['  /\\_/\\     ', '·( •ω• )    '], ['   /\\_/\\    ', '· ( •ω• )   '],
+    ['    /\\_/\\   ', '· ·( •ω• )  '], ['     /\\_/\\  ', '· · ( •ω• ) '], ['      /\\_/\\ ', '· · ·( ^ω^ )']] },
+  { mode: 'requesting', name: '물고기 쫓기', desc: '앞에서 도망가는 물고기를 따라가요', ms: 300, frames: [
+    [' /\\_/\\    ><>', '( •ω• )'], [' /\\_/\\   ><> ', '( •ω• )っ'], [' /\\_/\\  ><>  ', '( ºωº )っ'],
+    [' /\\_/\\ ><>   ', '( >ω< )つ'], [' /\\_/\\     ><>', '( ˘ω˘ )']] },
+  { mode: 'requesting', name: '기지개 쭉', desc: '몸이 쭉 늘어났다 돌아와요', ms: 380, frames: [
+    [' /\\_/\\     ', '( •ω• )    '], [' /\\_/\\__   ', '( -ω-   )~ '], [' /\\_/\\____ ', '( >ω<     )~'],
+    [' /\\_/\\__   ', '( -ω-   )~ '], [' /\\_/\\     ', '( ^ω^ )    ']] },
+  { mode: 'requesting', name: '폴짝 점프', desc: '제자리에서 폴짝', ms: 260, frames: [
+    [' /\\_/\\', '( •ω• )'], [' /\\_/\\', '( •ω• )'], ['( ^ω^ )', '  U U  '], [' /\\_/\\', '( ^ω^ )']] },
+  { mode: 'requesting', name: '레이저 포인터', desc: '빨간 점이 움직이는 쪽을 눈으로 쫓아요', ms: 300, frames: [
+    [' /\\_/\\       ', '( •ω• )   •  '], [' /\\_/\\     • ', '(  •ω•)      '], [' /\\_/\\       ', '(•ω•  )•     '],
+    [' /\\_/\\       ', '( ºωº )    • '], [' /\\_/\\       ', '( >ω< )つ  • ']] },
+  { mode: 'mini', name: '1줄 산책냥', desc: '꼬리 달린 고양이가 한 줄을 총총 걸어가요', ms: 300, frames: [
+    ['', 'ᓚᘏᗢ      '], ['', ' ᓚᘏᗢ     '], ['', '  ᓚᘏᗢ    '], ['', '   ᓚᘏᗢ   '], ['', '    ᓚᘏᗢ  '], ['', '     ᓚᘏᗢ ♡']] },
+];
+
+const SECTIONS = [
+  { key: 'thinking', title: '생각 중 (thinking)', note: 'Claude가 생각하는 동안' },
+  { key: 'tool', title: '도구 사용 중 (tool-use)', note: '파일을 읽고 명령을 돌리는 동안' },
+  { key: 'responding', title: '답변 작성 중 (responding)', note: '답을 써 내려가는 동안' },
+  { key: 'requesting', title: '응답 기다리는 중 (requesting)', note: '요청을 보내고 기다리는 동안' },
+  { key: 'mini', title: '좁은 창용', note: '터미널 폭이 좁을 때' },
+];
+
+const ASCII_MAP = [[/•/g, 'o'], [/ω/g, '.'], [/˘/g, '-'], [/˙/g, 'o'], [/º/g, 'O'], [/≧/g, '>'], [/≦/g, '<'],
+  [/♡/g, '<3'], [/[♪♫]/g, '~'], [/⌒/g, '~'], [/[✧✦⋆]/g, '*'], [/ฅ/g, 'm'], [/▭/g, '='], [/·/g, '.'],
+  [/[つっ]/g, 'o'], [/[ノﾉ]/g, '/']];
+const ACCENTS = [[/(♡|<3)/g, 'a-pink'], [/(><>|<><)/g, 'a-blue'], [/([✧✦⋆♪♫]|\*)/g, 'a-yellow'], [/(<:3 \)~|@)/g, 'a-dim'], [/(z+Z*z*|Z+z*)/g, 'a-blue'], [/(▭+)/g, 'a-green']];
+
+const wide = ch => /[\u3000-\u30ff\uff01-\uff60]/.test(ch) ? 2 : 1;
+const isHangul = ch => { const c = ch.codePointAt(0); return (c >= 0x3130 && c <= 0x318f) || (c >= 0xac00 && c <= 0xd7a3); };
+const width = s => [...s].reduce((n, ch) => n + (isHangul(ch) ? 2 : wide(ch)), 0);
+
+// 고양이 행동에 맞춘 스피너 단어 (번호 순서)
+const VERBS = [
+  ['Dozing', 'Snoozing', 'Nodding off'], ['Dreaming of fish', 'Daydreaming'], ['Looking around', 'Peering'],
+  ['Perking up', 'Listening'], ['Loafing', 'Baking bread'], ['Stargazing', 'Counting stars'],
+  ['Chasing yarn', 'Batting yarn'], ['Kneading', 'Making biscuits'], ['Coding', 'Pawing keys'],
+  ['Hiding in box', 'Peekabooing'], ['Stalking', 'Pouncing'], ['Fishing', 'Reeling in'],
+  ['Tail-swishing', 'Wiggling'], ['Head-bumping', 'Loving you'], ['Munching churu', 'Slurping'],
+  ['Purring', 'Humming'], ['Waving', 'Saying hi'], ['Winking', 'Sparkling'],
+  ['Pitter-pattering', 'Trotting'], ['Chasing fish', 'Swiping'], ['Stretching', 'Yawning'],
+  ['Hopping', 'Leaping'], ['Chasing the dot', 'Hunting red dot'], ['Strolling', 'Prowling'],
+];
+// 입 후보: 작을수록 귀엽다는 피드백 반영. 앞쪽이 작은 것
+const MOUTHS = [['ꞈ', '작은 ^'], ['ᴗ', '작은 웃음'], ['ᵕ', '작은 u'], ['˕', '납작'], ['ᴥ', '곰돌이 코'], ['.', '점'], ['ㅅ', 'ㅅ (2칸)'], ['ω', '지금 것']];
+// 감은 눈 후보: 동그란 눈(•)과 크기가 비슷한 것 위주
+const CLOSEDS = [['ᴗ', '작은 반달'], ['◡', '아래 반달'], ['u', '두꺼운 u'], ['^', '웃는 눈'], ['⌣', '웃는 곡선'], ['˘', '처음 것 (얇음)']];
+let closed = 'ᴗ';
+try { closed = localStorage.getItem('closed2') || 'ᴗ'; } catch {}
+let mouth = 'ꞈ';
+try { mouth = localStorage.getItem('mouth') || 'ꞈ'; } catch {}
+const pad = (s, w) => s + ' '.repeat(Math.max(0, w - width(s)));
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function paint(line) {
+  let html = esc(line);
+  for (const [re, cls] of ACCENTS) {
+    html = html.replace(new RegExp(re.source.replace(/</g, '&lt;').replace(/>/g, '&gt;'), 'g'), m => `<span class="${cls}">${m}</span>`);
+  }
+  return html.replace(/\{([^}]*)\}/g, '|<span class="screen">$1</span>|');
+}
+
+const GLYPHS = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢'];
+let picked = new Set();
+try { picked = new Set(JSON.parse(localStorage.getItem('picked') || '[]')); } catch {}
+let ascii = false, speed = 1;
+
+const root = document.getElementById('sections');
+const nodes = [];
+let n = 0;
+for (const sec of SECTIONS) {
+  const s = document.createElement('section');
+  s.innerHTML = `<h2>${sec.title}</h2><p>${sec.note}</p><div class="grid"></div>`;
+  const grid = s.querySelector('.grid');
+  CATS.filter(c => c.mode === sec.key).forEach(cat => {
+    n += 1; cat.id = n;
+    const card = document.createElement('div');
+    card.className = 'card' + (picked.has(n) ? ' on' : '');
+    card.innerHTML = `<div class="head"><span class="num">#${String(n).padStart(2, '0')}</span><span class="name">${cat.name}</span>
+      <input type="checkbox" id="pick-${n}" aria-label="${cat.name} 고르기" ${picked.has(n) ? 'checked' : ''}></div>
+      <div class="term"><pre></pre></div><p class="desc">${cat.desc}</p><p class="verbs">${VERBS[n - 1].map(v => v + '…').join('  ')}</p>`;
+    card.querySelector('input').addEventListener('change', e => {
+      e.target.checked ? picked.add(cat.id) : picked.delete(cat.id);
+      card.classList.toggle('on', e.target.checked); renderPicked();
+    });
+    grid.appendChild(card);
+    nodes.push({ cat, pre: card.querySelector('pre'), verbs: VERBS[n - 1], secs: 3 + (n * 7) % 40 });
+  });
+  root.appendChild(s);
+}
+
+function framesOf(cat) {
+  const fs = cat.frames.map(f => ascii ? f.map(l => ASCII_MAP.reduce((s, [re, r]) => s.replace(re, r), l)) : f.map(l => l.replace(/[-˘](?=ω)|(?<=ω)[-˘]/g, closed).replace(/˙/g, '•').split('ω').join(mouth)));
+  const w = Math.max(...fs.flat().map(width));
+  return fs.map(f => f.map(l => pad(l, w)));
+}
+
+function shimmer(word, t) {
+  const pos = (t / 90) % (word.length + 6) - 3;
+  return [...word].map((ch, i) => {
+    const d = Math.abs(i - pos);
+    const c = d < 1 ? '#ffd6c4' : d < 2.2 ? '#eba58a' : 'var(--claude)';
+    return `<span style="color:${c}">${ch}</span>`;
+  }).join('');
+}
+
+const start = performance.now();
+function tick(now) {
+  const t = now - start;
+  const g = GLYPHS[Math.floor(t / 120) % GLYPHS.length];
+  for (const nd of nodes) {
+    const fs = framesOf(nd.cat);
+    const f = fs[Math.floor(t * speed / nd.cat.ms) % fs.length];
+    const secs = nd.secs + Math.floor(t / 1000);
+    const word = nd.verbs[Math.floor(t / 3500) % nd.verbs.length];
+    const line = `<span class="glyph">${g}</span> <span class="word">${shimmer(word + '…', t)}</span> <span class="meta">(${secs}s · ↓ ${(1.2 + nd.secs / 10).toFixed(1)}k tokens · high effort)</span>`;
+    const top = `<span class="cat">${paint(f[0])}</span>`;
+    const bottom = `<span class="cat">${paint(f[1])}</span>  ${line}`;
+    nd.pre.innerHTML = nd.cat.mode === 'mini' ? `<span class="cat">${paint(f[1])}</span>  ${line}` : `${top}\n${bottom}`;
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+function renderPicked() {
+  const ids = [...picked].sort((a, b) => a - b);
+  try { localStorage.setItem('picked', JSON.stringify(ids)); } catch {}
+  const el = document.getElementById('picked');
+  el.innerHTML = ids.length ? `고른 고양이 <b>${ids.length}</b>종: ${ids.map(i => '#' + i).join(', ')}` : '아직 고른 고양이가 없어요';
+}
+renderPicked();
+
+const mouthBox = document.getElementById('mouths');
+MOUTHS.forEach(([m, label], i) => {
+  const el = document.createElement('label');
+  el.title = label;
+  el.innerHTML = `<input type="radio" name="mouth" id="mouth-${i}" value="${m}" ${m === mouth ? 'checked' : ''}><span>${m}</span>`;
+  el.querySelector('input').addEventListener('change', () => { mouth = m; try { localStorage.setItem('mouth', m); } catch {} });
+  mouthBox.appendChild(el);
+});
+const closedBox = document.getElementById('closeds');
+CLOSEDS.forEach(([m, label], i) => {
+  const el = document.createElement('label');
+  el.title = label;
+  el.innerHTML = `<input type="radio" name="closed" id="closed-${i}" value="${m}" ${m === closed ? 'checked' : ''}><span>${m}</span>`;
+  el.querySelector('input').addEventListener('change', () => { closed = m; try { localStorage.setItem('closed2', m); } catch {} });
+  closedBox.appendChild(el);
+});
+document.getElementById('ascii').addEventListener('change', e => { ascii = e.target.checked; });
+document.getElementById('speed').addEventListener('input', e => { speed = Number(e.target.value); });
+document.getElementById('copy').addEventListener('click', async e => {
+  const text = '고른 고양이: ' + [...picked].sort((a, b) => a - b).map(i => '#' + i).join(', ');
+  try { await navigator.clipboard.writeText(text); e.target.textContent = '복사했어요'; }
+  catch { document.getElementById('picked').textContent = text; e.target.textContent = '위 글자를 직접 복사해 주세요'; }
+  setTimeout(() => { e.target.textContent = '번호 복사'; }, 1800);
+});
+</script>
