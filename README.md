@@ -39,7 +39,8 @@ claude plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 
 ## 고양이 도감
 
-`docs/cat-gallery.html`을 브라우저로 열면 24종이 움직이는 걸 볼 수 있어요.
+- **움직이는 도감**: 저장소를 받아서 `docs/cat-gallery.html`을 브라우저(Chrome, Safari 등)로 열면 24종이 실제로 움직여요. 체크박스로 마음에 드는 고양이를 고르고, 입 모양과 감은 눈 모양도 바꿔 볼 수 있어요.
+- **데모 영상**: [docs/cat-gallery-demo.mov](docs/cat-gallery-demo.mov) (도감이 움직이는 8초짜리 화면 녹화)
 
 | Claude가 하는 일 | 나오는 고양이 |
 |---|---|
@@ -81,3 +82,7 @@ claude plugin test .
 ```
 
 고양이 데이터는 `hooks/cats.ts`, 색칠과 폭 맞추기는 `hooks/art.ts`, 프레임 타이머는 `hooks/cat.tsx`에 있어요.
+
+## 라이선스
+
+[MIT](LICENSE)

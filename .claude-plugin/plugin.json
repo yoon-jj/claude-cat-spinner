@@ -6,6 +6,7 @@
     "name": "yoon-jj"
   },
   "repository": "https://github.com/yoon-jj/claude-cat-spinner",
+  "license": "MIT",
   "userConfig": {
     "style": {
       "type": "string",
