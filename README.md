@@ -1,26 +1,35 @@
-# claude-cat-spinner
+# claude-cat-spinner 🐾
 
-Claude Code가 일하는 동안 돌아가는 스피너 옆에 ASCII 고양이 애니메이션을 붙여 주는 mod예요.
+Claude Code가 일하는 동안 돌아가는 스피너 옆에 ASCII 고양이가 놀러 와요.
+
+*A Claude Code mod that puts a tiny animated ASCII cat next to the spinner. Zero extra tokens.*
 
 ```
  /\_/\
 ( ᴗꞈᴗ ) zZz  ✻ Dozing… (12s · ↓ 1.2k tokens · high effort)
 ```
 
-- **고양이 24종**: Claude가 생각 중인지, 도구를 쓰는 중인지, 답을 쓰는 중인지에 따라 어울리는 고양이가 나와요.
-- **스피너 단어도 고양이 행동으로**: `Dozing…`, `Kneading…`, `Munching churu…`처럼 바뀌어요.
-- **원래 정보는 그대로**: 별 문자 회전, 글자 반짝임, 경과 시간, 토큰 수, effort 표시는 손대지 않아요.
-- **토큰 비용 0**: 애니메이션은 터미널 안에서만 그려지고 모델에는 아무것도 보내지 않아요.
+```
+ /\_/\   |>==_|
+( •ꞈ•)つ/______\  ✻ Coding… (34s · ↓ 3.4k tokens · high effort)
+```
+
+## 이런 게 돼요
+
+- **고양이 24종**: Claude가 지금 뭘 하는지에 따라 어울리는 고양이가 나와요. 생각할 땐 꾸벅꾸벅 졸고, 도구를 쓸 땐 노트북을 두드려요.
+- **스피너 단어도 고양이 말로**: `Dozing…`, `Kneading…`, `Munching churu…`, `Chasing the dot…`
+- **원래 정보는 그대로**: 별 문자 회전, 글자 반짝임, 경과 시간, 토큰 수, effort 표시는 전혀 건드리지 않아요.
+- **토큰 비용 0**: 고양이는 내 터미널 안에서만 그려져요. 모델에는 아무것도 보내지 않아요.
 
 ## 설치
 
-Claude Code 터미널 입력창에서:
+Claude Code 입력창에서:
 
 ```
 /plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 ```
 
-마켓플레이스를 추가할지 물으면 `y`, 그다음 설치 범위(scope)를 고르면 돼요.
+마켓플레이스를 추가할지 물으면 `y`, 그다음 설치 범위를 고르면 끝이에요. 다음 작업부터 고양이가 나와요.
 
 셸에서 설치하려면:
 
@@ -30,15 +39,15 @@ claude plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 
 ## 고양이 도감
 
-`docs/cat-gallery.html`을 브라우저로 열면 24종이 실제로 움직이는 모습을 볼 수 있어요.
+`docs/cat-gallery.html`을 브라우저로 열면 24종이 움직이는 걸 볼 수 있어요.
 
-| 상태 | 고양이 |
+| Claude가 하는 일 | 나오는 고양이 |
 |---|---|
 | 생각 중 | 꾸벅꾸벅, 물고기 꿈, 두리번두리번, 귀 쫑긋, 식빵 굽기, 별 세기 |
 | 도구 사용 중 | 실뭉치 데굴데굴, 꾹꾹이, 노트북 타닥타닥, 상자에 쏙, 쥐돌이 사냥, 낚시 |
-| 답변 작성 중 | 꼬리 살랑, 하트 뿅뿅, 츄르 냠냠, 골골송, 안녕 손인사, 반짝 윙크 |
+| 답변 쓰는 중 | 꼬리 살랑, 하트 뿅뿅, 츄르 냠냠, 골골송, 안녕 손인사, 반짝 윙크 |
 | 응답 기다리는 중 | 총총 걸어가기, 물고기 쫓기, 기지개 쭉, 폴짝 점프, 레이저 포인터 |
-| 좁은 창 | 1줄 산책냥 `ᓚᘏᗢ` |
+| 창이 좁을 때 | 한 줄 산책냥 `ᓚᘏᗢ` |
 
 ## 설정
 
@@ -46,15 +55,23 @@ claude plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 
 | 설정 | 값 | 설명 |
 |---|---|---|
-| `style` | `cute` (기본) / `ascii` | 고양이가 칸이 밀려 보이면 `ascii`로 바꾸세요. 순수 ASCII 문자로만 그려요. |
-| `speed` | 숫자, 기본 `1` | 애니메이션 속도 배율. `2`면 두 배 빨라요. |
+| `style` | `cute` (기본) / `ascii` | 고양이 모양이 밀려 보이면 `ascii`로. 순수 ASCII로만 그려요. |
+| `speed` | 숫자, 기본 `1` | 애니메이션 속도. `2`면 두 배 빨라요. |
 
-## 알아 둘 것
+## 끄기 / 지우기
 
-- 터미널에서만 고양이가 나와요. VS Code와 데스크톱 앱에서는 원래 스피너 그대로예요.
-- 창이 좁아서 원래 스피너 줄이 잘릴 것 같으면 한 줄 고양이로 바꿔요.
-- `• ♡ ♪` 같은 일부 문자는 터미널 설정에 따라 두 칸으로 그려질 수 있어요. 그럴 땐 `style`을 `ascii`로 바꾸세요.
-- Claude Code의 플러그인 API는 아직 얼리 액세스라 버전이 바뀌면 동작이 달라질 수 있어요.
+```
+claude plugin disable cat-spinner@claude-cat-spinner     # 잠깐 끄기
+claude plugin enable cat-spinner@claude-cat-spinner      # 다시 켜기
+claude plugin uninstall cat-spinner@claude-cat-spinner   # 지우기
+```
+
+## 알아 두면 좋은 것
+
+- 고양이는 터미널에서만 나와요. VS Code와 데스크톱 앱에서는 원래 스피너 그대로예요.
+- 창이 좁아서 원래 스피너 줄이 잘릴 것 같으면 한 줄 고양이로 바뀌어요.
+- `• ♡ ♪` 같은 문자는 터미널 설정에 따라 두 칸으로 그려질 수 있어요. 고양이가 찌그러져 보이면 `style`을 `ascii`로 바꿔 주세요.
+- Claude Code 플러그인 API는 아직 얼리 액세스라, Claude Code가 업데이트되면 동작이 달라질 수 있어요.
 
 ## 개발
 
@@ -62,3 +79,5 @@ claude plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 claude plugin validate .
 claude plugin test .
 ```
+
+고양이 데이터는 `hooks/cats.ts`, 색칠과 폭 맞추기는 `hooks/art.ts`, 프레임 타이머는 `hooks/cat.tsx`에 있어요.
