@@ -4,6 +4,8 @@ Claude Code가 일하는 동안 돌아가는 스피너 옆에 ASCII 고양이가
 
 *A Claude Code mod that puts a tiny animated ASCII cat next to the spinner. Zero extra tokens.*
 
+![고양이 도감이 움직이는 모습](docs/cat-gallery-demo.gif)
+
 ```
  /\_/\
 ( ᴗꞈᴗ ) zZz  ✻ Dozing… (12s · ↓ 1.2k tokens · high effort)
@@ -40,7 +42,7 @@ claude plugin install cat-spinner --marketplace yoon-jj/claude-cat-spinner
 ## 고양이 도감
 
 - **움직이는 도감**: 저장소를 받아서 `docs/cat-gallery.html`을 브라우저(Chrome, Safari 등)로 열면 24종이 실제로 움직여요. 체크박스로 마음에 드는 고양이를 고르고, 입 모양과 감은 눈 모양도 바꿔 볼 수 있어요.
-- **데모 영상**: [docs/cat-gallery-demo.mov](docs/cat-gallery-demo.mov) (도감이 움직이는 8초짜리 화면 녹화)
+- **데모**: 맨 위 GIF가 도감이 움직이는 모습이에요. 원본 영상은 [docs/cat-gallery-demo.mov](docs/cat-gallery-demo.mov)에 있어요.
 
 | Claude가 하는 일 | 나오는 고양이 |
 |---|---|
